@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const API_BASE = "https://peizo-backend.onrender.com/";
+const API_BASE = "https://peizo-backend.onrender.com";
 
 export default function App() {
   const [stats, setStats] = useState(null);
