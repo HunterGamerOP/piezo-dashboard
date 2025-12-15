@@ -54,7 +54,56 @@ export default function App() {
 
   return (
     <div style={pageStyle}>
-      <Header />
+      <header
+  style={{
+    padding: "18px 32px 10px",
+    borderBottom: "1px solid rgba(16,185,129,0.25)",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    backdropFilter: "blur(14px)",
+    background:
+      "linear-gradient(90deg,rgba(6,78,59,0.9),rgba(5,46,22,0.95))",
+    boxShadow: "0 18px 40px rgba(0,0,0,0.4)",
+    position: "sticky",
+    top: 0,
+    zIndex: 20,
+  }}
+>
+  <div>
+    <div
+      style={{
+        fontSize: 13,
+        letterSpacing: 2,
+        textTransform: "uppercase",
+        color: "#6ee7b7",
+        marginBottom: 2,
+      }}
+    >
+      🌍 Sustainability · ⚡ Smart Energy
+    </div>
+    <h1 style={{ margin: 0, fontSize: 26, fontWeight: 700 }}>
+      Piezoelectric Smart Tile Dashboard
+    </h1>
+    <p style={{ margin: "3px 0 0", fontSize: 12, color: "#a7f3d0" }}>
+      AI-powered prediction of renewable energy from footsteps.
+    </p>
+  </div>
+
+  <div
+    style={{
+      padding: "6px 12px",
+      background: "rgba(6,95,70,0.4)",
+      borderRadius: 12,
+      border: "1px solid rgba(52,211,153,0.6)",
+      color: "#a7f3d0",
+      fontSize: 12,
+    }}
+  >
+    🔌 Backend: Render (Live)
+  </div>
+</header>
+
 
       <main style={mainStyle}>
         <HoverCard style={overviewStyle}>
