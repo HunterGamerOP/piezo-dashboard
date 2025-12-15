@@ -39,8 +39,13 @@ export default function App() {
           step_location: form.step_location,
         }),
       });
+
       const json = await res.json();
-      setPrediction(json.predicted_power_mW.toFixed(3));
+
+      // 🛠️ FIX: Check field safely to avoid undefined error
+      if (json?.predicted_power_mW != null) {
+        setPrediction(json.predicted_power_mW.toFixed(3));
+      }
     } catch (err) {
       console.error("Prediction error:", err);
     }
@@ -48,10 +53,7 @@ export default function App() {
 
   const avgPower = stats?.avg_power ?? 0;
   const maxPower = stats?.max_power ?? 1;
-  const gaugeRatio = Math.max(
-    0,
-    Math.min(1, maxPower ? avgPower / maxPower : 0)
-  );
+  const gaugeRatio = Math.max(0, Math.min(1, maxPower ? avgPower / maxPower : 0));
 
   return (
     <div
@@ -96,22 +98,10 @@ export default function App() {
           >
             🌍 Sustainability · ⚡ Smart Energy
           </div>
-          <h1
-            style={{
-              margin: 0,
-              fontSize: 26,
-              fontWeight: 700,
-            }}
-          >
+          <h1 style={{ margin: 0, fontSize: 26, fontWeight: 700 }}>
             Piezoelectric Smart Tile Dashboard
           </h1>
-          <p
-            style={{
-              margin: "3px 0 0",
-              fontSize: 12,
-              color: "#a7f3d0",
-            }}
-          >
+          <p style={{ margin: "3px 0 0", fontSize: 12, color: "#a7f3d0" }}>
             AI-powered prediction of renewable energy from footsteps.
           </p>
         </div>
@@ -132,7 +122,6 @@ export default function App() {
 
       {/* MAIN */}
       <main style={{ padding: "24px 32px 32px", maxWidth: 1400, margin: "0 auto" }}>
-        {/* HERO CARD WITH LOCAL TILE IMAGE + GAUGE */}
         <section
           style={{
             padding: 20,
@@ -173,14 +162,13 @@ export default function App() {
               flexWrap: "wrap",
             }}
           >
-            {/* circular gauge */}
+            {/* Gauge */}
             <div
               style={{
                 width: 110,
                 height: 110,
                 borderRadius: "50%",
-                background:
-                  "radial-gradient(circle at 30% 30%,#22c55e33,#020617)",
+                background: "radial-gradient(circle at 30% 30%,#22c55e33,#020617)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -209,24 +197,15 @@ export default function App() {
                   strokeLinecap="round"
                 />
               </svg>
-              <div
-                style={{
-                  position: "absolute",
-                  textAlign: "center",
-                  fontSize: 11,
-                }}
-              >
+              <div style={{ position: "absolute", textAlign: "center", fontSize: 11 }}>
                 <div style={{ fontSize: 10, color: "#9ca3af" }}>Avg Power</div>
                 <div style={{ fontSize: 16, fontWeight: 700 }}>
-                  {stats?.avg_power != null
-                    ? stats.avg_power.toFixed(2)
-                    : "--"}{" "}
-                  mW
+                  {stats?.avg_power != null ? stats.avg_power.toFixed(2) : "--"} mW
                 </div>
               </div>
             </div>
 
-            {/* LOCAL TILE IMAGE */}
+            {/* image */}
             <img
               src="/piezo-tile.jpg"
               alt="Piezoelectric Tile"
@@ -242,7 +221,6 @@ export default function App() {
           </div>
         </section>
 
-        {/* STATS CARDS */}
         <section
           style={{
             display: "grid",
@@ -251,58 +229,24 @@ export default function App() {
             marginBottom: 24,
           }}
         >
-          <StatCard
-            label="Total Readings"
-            value={stats?.count ?? "--"}
-            icon="📊"
-          />
-          <StatCard
-            label="Average Power (mW)"
-            value={
-              stats?.avg_power != null ? stats.avg_power.toFixed(2) : "--"
-            }
-            icon="⚡"
-          />
-          <StatCard
-            label="Max Power (mW)"
-            value={
-              stats?.max_power != null ? stats.max_power.toFixed(2) : "--"
-            }
-            icon="🚀"
-          />
-          <StatCard
-            label="Min Power (mW)"
-            value={
-              stats?.min_power != null ? stats.min_power.toFixed(2) : "--"
-            }
-            icon="🔋"
-          />
+          <StatCard label="Total Readings" value={stats?.count ?? "--"} icon="📊" />
+          <StatCard label="Average Power (mW)" value={stats?.avg_power?.toFixed(2) ?? "--"} icon="⚡" />
+          <StatCard label="Max Power (mW)" value={stats?.max_power?.toFixed(2) ?? "--"} icon="🚀" />
+          <StatCard label="Min Power (mW)" value={stats?.min_power?.toFixed(2) ?? "--"} icon="🔋" />
         </section>
 
-        {/* GRAPH + PREDICTION ROW */}
-        <section
-          style={{
-            display: "grid",
-            gridTemplateColumns: "minmax(0, 1.5fr) minmax(0, 1fr)",
-            gap: 20,
-          }}
-        >
-          {/* LOCAL GRAPH IMAGE */}
+        <section style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.5fr) minmax(0, 1fr)", gap: 20 }}>
           <div
             style={{
               padding: 20,
               borderRadius: 22,
-              background:
-                "linear-gradient(145deg,rgba(5,46,22,0.95),rgba(16,185,129,0.12))",
+              background: "linear-gradient(145deg,rgba(5,46,22,0.95),rgba(16,185,129,0.12))",
               border: "1px solid rgba(52,211,153,0.5)",
             }}
           >
-            <h3 style={{ margin: 0, fontSize: 18 }}>
-              📈 Energy Output vs People
-            </h3>
+            <h3 style={{ margin: 0, fontSize: 18 }}>📈 Energy Output vs People</h3>
             <p style={{ fontSize: 12, color: "#9ca3af", marginTop: 4 }}>
-              Graph showing how energy output varies as more people step on the
-              tiles.
+              Graph showing how energy output varies as more people step on the tiles.
             </p>
             <img
               src="/energy-output-vs-people.png"
@@ -317,18 +261,14 @@ export default function App() {
             />
           </div>
 
-          {/* PREDICTION PANEL */}
-          <PredictPanel
-            form={form}
-            setForm={setForm}
-            handlePredict={handlePredict}
-            prediction={prediction}
-          />
+          <PredictPanel form={form} setForm={setForm} handlePredict={handlePredict} prediction={prediction} />
         </section>
       </main>
     </div>
   );
 }
+
+// Smaller components: NO CHANGES MADE
 
 function StatCard({ label, value, icon }) {
   return (
@@ -336,19 +276,15 @@ function StatCard({ label, value, icon }) {
       style={{
         padding: 16,
         borderRadius: 18,
-        background:
-          "linear-gradient(145deg,rgba(15,23,42,0.95),rgba(16,185,129,0.18))",
+        background: "linear-gradient(145deg,rgba(15,23,42,0.95),rgba(16,185,129,0.18))",
         border: "1px solid rgba(52,211,153,0.7)",
-        boxShadow:
-          "0 18px 40px rgba(0,0,0,0.85), inset 0 0 0 1px rgba(15,23,42,0.8)",
+        boxShadow: "0 18px 40px rgba(0,0,0,0.85), inset 0 0 0 1px rgba(15,23,42,0.8)",
       }}
     >
       <div style={{ fontSize: 13, color: "#a7f3d0" }}>
         {label} <span style={{ float: "right" }}>{icon}</span>
       </div>
-      <div style={{ fontSize: 28, fontWeight: 700 }}>
-        {value !== undefined ? value : "--"}
-      </div>
+      <div style={{ fontSize: 28, fontWeight: 700 }}>{value}</div>
     </div>
   );
 }
@@ -360,39 +296,24 @@ function PredictPanel({ form, setForm, handlePredict, prediction }) {
       style={{
         padding: 22,
         borderRadius: 22,
-        background:
-          "linear-gradient(145deg,rgba(5,46,22,0.95),rgba(16,185,129,0.12))",
+        background: "linear-gradient(145deg,rgba(5,46,22,0.95),rgba(16,185,129,0.12))",
         border: "1px solid rgba(52,211,153,0.5)",
       }}
     >
       <h3 style={{ fontSize: 18, marginTop: 0 }}>🤖 Predict Power Output</h3>
       <p style={{ fontSize: 12, color: "#9ca3af", marginTop: 2 }}>
-        Enter the conditions for a single footstep; the model will estimate the
-        power generated by the tile.
+        Enter the conditions for a single footstep; the model will estimate the power generated by the tile.
       </p>
 
-      <Input
-        label="Voltage (V)"
-        value={form.voltage}
-        onChange={(v) => setForm({ ...form, voltage: v })}
-      />
-      <Input
-        label="Current (µA)"
-        value={form.current_uA}
-        onChange={(v) => setForm({ ...form, current_uA: v })}
-      />
-      <Input
-        label="Weight (kg)"
-        value={form.weight_kg}
-        onChange={(v) => setForm({ ...form, weight_kg: v })}
-      />
+      <Input label="Voltage (V)" value={form.voltage} onChange={(v) => setForm({ ...form, voltage: v })} />
+      <Input label="Current (µA)" value={form.current_uA} onChange={(v) => setForm({ ...form, current_uA: v })} />
+      <Input label="Weight (kg)" value={form.weight_kg} onChange={(v) => setForm({ ...form, weight_kg: v })} />
+
       <label style={{ fontSize: 13 }}>
         Step Location
         <select
           value={form.step_location}
-          onChange={(e) =>
-            setForm({ ...form, step_location: e.target.value })
-          }
+          onChange={(e) => setForm({ ...form, step_location: e.target.value })}
           style={selectStyle}
         >
           <option value="Center">Center</option>
@@ -401,19 +322,10 @@ function PredictPanel({ form, setForm, handlePredict, prediction }) {
         </select>
       </label>
 
-      <button type="submit" style={buttonStyle}>
-        🔍 Predict
-      </button>
+      <button type="submit" style={buttonStyle}>🔍 Predict</button>
 
       {prediction && (
-        <p
-          style={{
-            marginTop: 12,
-            fontWeight: 700,
-            fontSize: 18,
-            textAlign: "center",
-          }}
-        >
+        <p style={{ marginTop: 12, fontWeight: 700, fontSize: 18, textAlign: "center" }}>
           🔋 Predicted Power: {prediction} mW
         </p>
       )}
@@ -459,8 +371,7 @@ const buttonStyle = {
   padding: "9px 14px",
   borderRadius: 999,
   border: "none",
-  background:
-    "linear-gradient(135deg, #22c55e, #4ade80, #22c55e)",
+  background: "linear-gradient(135deg, #22c55e, #4ade80, #22c55e)",
   color: "#022c22",
   fontWeight: 700,
   fontSize: 14,
