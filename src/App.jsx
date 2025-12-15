@@ -54,67 +54,13 @@ export default function App() {
 
   return (
     <div style={pageStyle}>
-      <header style={headerStyle}>
-        <div>
-          <div style={taglineStyle}>🌍 Sustainability · ⚡ Smart Energy</div>
-          <h1 style={titleStyle}>Piezoelectric Smart Tile Dashboard</h1>
-          <p style={subtitleStyle}>
-            AI-powered prediction of renewable energy from footsteps.
-          </p>
-        </div>
-
-        <div style={backendBadgeStyle}>
-          🔌 Backend: Render (Live)
-        </div>
-      </header>
+      <Header />
 
       <main style={mainStyle}>
-        {/* OVERVIEW */}
-        <section style={{ ...cardBase, ...hoverLift }}>
-          <div>
-            <h2 style={{ marginTop: 0 }}>♻️ Project Overview</h2>
-            <p style={{ fontSize: 14, opacity: 0.9 }}>
-              This dashboard predicts power output using a machine learning model
-              based on <b>voltage</b>, <b>current</b>, <b>weight</b>, and{" "}
-              <b>step location</b>.
-            </p>
-            <ul style={{ fontSize: 14, opacity: 0.9 }}>
-              <li>⚡ Real-time ML prediction</li>
-              <li>📊 Statistical insights</li>
-              <li>🌱 Smart energy simulation</li>
-            </ul>
-          </div>
+        <HoverCard style={overviewStyle}>
+          <Overview stats={stats} gaugeRatio={gaugeRatio} />
+        </HoverCard>
 
-          {/* Gauge */}
-          <div style={{ display: "flex", justifyContent: "flex-end" }}>
-            <div style={gaugeWrapper}>
-              <svg width="90" height="90" viewBox="0 0 36 36">
-                <path
-                  d="M18 2 a 16 16 0 1 1 0 32 a 16 16 0 1 1 0 -32"
-                  fill="none"
-                  stroke="#1f2937"
-                  strokeWidth="3.2"
-                />
-                <path
-                  d="M18 2 a 16 16 0 1 1 0 32 a 16 16 0 1 1 0 -32"
-                  fill="none"
-                  stroke="#22c55e"
-                  strokeWidth="3.2"
-                  strokeDasharray={`${100 * gaugeRatio}, 100`}
-                  strokeLinecap="round"
-                />
-              </svg>
-              <div style={gaugeText}>
-                <div style={{ fontSize: 10, color: "#9ca3af" }}>Avg Power</div>
-                <div style={{ fontSize: 16, fontWeight: 700 }}>
-                  {stats?.avg_power?.toFixed(2) ?? "--"} mW
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* STATS */}
         <section style={statsGrid}>
           <StatCard label="Total Readings" value={stats?.count ?? "--"} icon="📊" />
           <StatCard label="Average Power (mW)" value={stats?.avg_power?.toFixed(2) ?? "--"} icon="⚡" />
@@ -122,16 +68,18 @@ export default function App() {
           <StatCard label="Min Power (mW)" value={stats?.min_power?.toFixed(2) ?? "--"} icon="🔋" />
         </section>
 
-        {/* GRAPH + PREDICT */}
         <section style={{ display: "grid", gridTemplateColumns: "1.5fr 1fr", gap: 20 }}>
-          <div style={{ ...cardBase, ...hoverGlow }}>
+          <HoverCard style={graphStyle}>
             <h3>📈 Energy Output vs People</h3>
+            <p style={graphDesc}>
+              Graph showing how energy output varies as more people step on the tiles.
+            </p>
             <img
               src="/energy-output-vs-people.png"
-              alt="Energy graph"
-              style={{ width: "100%", borderRadius: 12, marginTop: 10 }}
+              alt="Energy Output vs People"
+              style={graphImg}
             />
-          </div>
+          </HoverCard>
 
           <PredictPanel
             form={form}
@@ -145,11 +93,45 @@ export default function App() {
   );
 }
 
-/* COMPONENTS */
+/* ---------- COMPONENTS ---------- */
+
+function HoverCard({ children, style }) {
+  const [hover, setHover] = useState(false);
+
+  return (
+    <div
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{
+        ...style,
+        transform: hover ? "translateY(-6px)" : "none",
+        boxShadow: hover
+          ? "0 25px 60px rgba(16,185,129,0.45)"
+          : style.boxShadow,
+        transition: "all 0.25s ease",
+      }}
+    >
+      {children}
+    </div>
+  );
+}
 
 function StatCard({ label, value, icon }) {
+  const [hover, setHover] = useState(false);
+
   return (
-    <div style={{ ...statCard, ...hoverLift }}>
+    <div
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{
+        ...statCardStyle,
+        transform: hover ? "translateY(-6px) scale(1.02)" : "none",
+        boxShadow: hover
+          ? "0 30px 70px rgba(16,185,129,0.55)"
+          : statCardStyle.boxShadow,
+        transition: "all 0.25s ease",
+      }}
+    >
       <div style={{ fontSize: 13, color: "#a7f3d0" }}>
         {label} <span style={{ float: "right" }}>{icon}</span>
       </div>
@@ -160,36 +142,58 @@ function StatCard({ label, value, icon }) {
 
 function PredictPanel({ form, setForm, handlePredict, prediction }) {
   return (
-    <form onSubmit={handlePredict} style={{ ...cardBase, ...hoverGlow }}>
-      <h3>🤖 Predict Power Output</h3>
+    <HoverCard style={predictStyle}>
+      <form onSubmit={handlePredict}>
+        <h3>🤖 Predict Power Output</h3>
 
-      <Input label="Voltage (V)" value={form.voltage} onChange={(v) => setForm({ ...form, voltage: v })} />
-      <Input label="Current (µA)" value={form.current_uA} onChange={(v) => setForm({ ...form, current_uA: v })} />
-      <Input label="Weight (kg)" value={form.weight_kg} onChange={(v) => setForm({ ...form, weight_kg: v })} />
+        <Input label="Voltage (V)" value={form.voltage} onChange={(v) => setForm({ ...form, voltage: v })} />
+        <Input label="Current (µA)" value={form.current_uA} onChange={(v) => setForm({ ...form, current_uA: v })} />
+        <Input label="Weight (kg)" value={form.weight_kg} onChange={(v) => setForm({ ...form, weight_kg: v })} />
 
-      <label>
-        Step Location
-        <select
-          value={form.step_location}
-          onChange={(e) => setForm({ ...form, step_location: e.target.value })}
-          style={selectStyle}
-        >
-          <option value="Center">Center</option>
-          <option value="Edge">Edge</option>
-          <option value="Corner">Corner</option>
-        </select>
-      </label>
+        <label>
+          Step Location
+          <select
+            value={form.step_location}
+            onChange={(e) => setForm({ ...form, step_location: e.target.value })}
+            style={selectStyle}
+          >
+            <option value="Center">Center</option>
+            <option value="Edge">Edge</option>
+            <option value="Corner">Corner</option>
+          </select>
+        </label>
 
-      <button type="submit" style={predictButton}>
-        🔍 Predict
-      </button>
+        <HoverButton />
 
-      {prediction && (
-        <p style={{ marginTop: 12, fontWeight: 700, textAlign: "center" }}>
-          🔋 Predicted Power: {prediction} mW
-        </p>
-      )}
-    </form>
+        {prediction && (
+          <p style={predictionStyle}>
+            🔋 Predicted Power: {prediction} mW
+          </p>
+        )}
+      </form>
+    </HoverCard>
+  );
+}
+
+function HoverButton() {
+  const [hover, setHover] = useState(false);
+
+  return (
+    <button
+      type="submit"
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{
+        ...buttonStyle,
+        transform: hover ? "scale(1.05)" : "scale(1)",
+        boxShadow: hover
+          ? "0 0 30px rgba(34,197,94,0.9)"
+          : buttonStyle.boxShadow,
+        transition: "all 0.2s ease",
+      }}
+    >
+      🔍 Predict
+    </button>
   );
 }
 
@@ -209,60 +213,69 @@ function Input({ label, value, onChange }) {
   );
 }
 
-/* STYLES */
+/* ---------- STYLES (UNCHANGED) ---------- */
 
 const pageStyle = {
   minHeight: "100vh",
-  background: "radial-gradient(circle at top, #16a34a22, #020617)",
+  background:
+    "radial-gradient(circle at top, #16a34a22, #000000), linear-gradient(135deg,#022c22,#020617)",
   color: "#e5ffe9",
   fontFamily: "system-ui",
 };
 
-const headerStyle = {
-  padding: "18px 32px",
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  background: "linear-gradient(90deg,#064e3b,#022c22)",
-  position: "sticky",
-  top: 0,
-};
-
-const taglineStyle = { fontSize: 13, letterSpacing: 2, color: "#6ee7b7" };
-const titleStyle = { margin: 0, fontSize: 26 };
-const subtitleStyle = { fontSize: 12, color: "#a7f3d0" };
-const backendBadgeStyle = {
-  padding: "6px 12px",
-  borderRadius: 12,
-  border: "1px solid rgba(52,211,153,0.6)",
-};
-
 const mainStyle = { padding: 32, maxWidth: 1400, margin: "0 auto" };
 
-const cardBase = {
-  padding: 22,
+const overviewStyle = {
+  padding: 20,
   borderRadius: 22,
-  background: "linear-gradient(145deg,#052e16,#16a34a22)",
+  background:
+    "linear-gradient(145deg,rgba(5,46,22,0.95),rgba(16,185,129,0.15))",
   border: "1px solid rgba(52,211,153,0.5)",
-};
-
-const hoverLift = {
-  transition: "all 0.25s ease",
-};
-
-const hoverGlow = {
-  transition: "all 0.25s ease",
-};
-
-const statCard = {
-  ...cardBase,
+  marginBottom: 24,
+  boxShadow: "0 18px 40px rgba(0,0,0,0.4)",
 };
 
 const statsGrid = {
   display: "grid",
   gridTemplateColumns: "repeat(4, 1fr)",
   gap: 16,
-  margin: "24px 0",
+  marginBottom: 24,
+};
+
+const statCardStyle = {
+  padding: 16,
+  borderRadius: 18,
+  background:
+    "linear-gradient(145deg,rgba(15,23,42,0.95),rgba(16,185,129,0.18))",
+  border: "1px solid rgba(52,211,153,0.7)",
+  boxShadow: "0 18px 40px rgba(0,0,0,0.85)",
+};
+
+const graphStyle = {
+  padding: 20,
+  borderRadius: 22,
+  background:
+    "linear-gradient(145deg,rgba(5,46,22,0.95),rgba(16,185,129,0.12))",
+  border: "1px solid rgba(52,211,153,0.5)",
+  boxShadow: "0 18px 40px rgba(0,0,0,0.6)",
+};
+
+const graphImg = {
+  width: "100%",
+  marginTop: 12,
+  borderRadius: 12,
+  boxShadow: "0 0 20px rgba(16,185,129,0.4)",
+};
+
+const graphDesc = { fontSize: 12, color: "#9ca3af", marginTop: 4 };
+
+const predictStyle = {
+  padding: 22,
+  borderRadius: 22,
+  background:
+    "linear-gradient(145deg,rgba(5,46,22,0.95),rgba(16,185,129,0.12))",
+  border: "1px solid rgba(52,211,153,0.5)",
+  boxShadow: "0 18px 40px rgba(0,0,0,0.6)",
 };
 
 const inputStyle = {
@@ -278,30 +291,23 @@ const inputStyle = {
 
 const selectStyle = { ...inputStyle };
 
-const predictButton = {
-  marginTop: 12,
-  width: "100%",
-  padding: "10px",
+const buttonStyle = {
+  marginTop: 10,
+  padding: "9px 14px",
   borderRadius: 999,
   border: "none",
-  cursor: "pointer",
+  background: "linear-gradient(135deg, #22c55e, #4ade80, #22c55e)",
+  color: "#022c22",
   fontWeight: 700,
-  background: "linear-gradient(135deg,#22c55e,#4ade80)",
-  transition: "all 0.2s ease",
+  fontSize: 14,
+  cursor: "pointer",
+  width: "100%",
+  boxShadow: "0 14px 30px rgba(22,163,74,0.7)",
 };
 
-const gaugeWrapper = {
-  width: 110,
-  height: 110,
-  borderRadius: "50%",
-  background: "radial-gradient(circle,#22c55e33,#020617)",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  position: "relative",
-};
-
-const gaugeText = {
-  position: "absolute",
+const predictionStyle = {
+  marginTop: 12,
+  fontWeight: 700,
+  fontSize: 18,
   textAlign: "center",
 };
