@@ -46,7 +46,12 @@ export default function App() {
             Predict renewable energy generation from footsteps using ML
           </p>
         </div>
-        <div style={badge}>Backend: Live</div>
+
+        {/* FIXED BADGE */}
+        <div style={backendBadge}>
+          <span>Backend</span>
+          <strong>Live</strong>
+        </div>
       </header>
 
       {/* HERO */}
@@ -65,22 +70,22 @@ export default function App() {
           </ul>
 
           <div style={avgGlass}>
-            <span style={{ opacity: 0.75 }}>Average Power</span>
-            <strong style={{ fontSize: 22 }}>
+            <span style={{ opacity: 0.8 }}>Average Power</span>
+            <strong style={{ fontSize: 22, color: "#22c55e" }}>
               {stats?.avg_power?.toFixed(2) ?? "--"} mW
             </strong>
           </div>
         </div>
 
-        {/* IMAGE */}
+        {/* IMAGE — FIXED PATH + POSITION */}
         <img
-          src="C:\Users\Garvit Gupta\Downloads\piezo-dashboard\public\piezo-step.jpg"
+          src="/piezo-step.jpg"
           alt="Person stepping on piezoelectric tile"
           style={heroImage}
         />
       </section>
 
-      {/* MAIN CONTENT */}
+      {/* MAIN */}
       <main style={content}>
         <div style={statsGrid}>
           <Stat label="Total Readings" value={stats?.count ?? "--"} />
@@ -159,14 +164,14 @@ function Input({ label, value, onChange }) {
   );
 }
 
-/* STYLES — APPLE GLASS */
+/* STYLES — GREEN APPLE GLASS */
 
 const page = {
   minHeight: "100vh",
   background: `
-    radial-gradient(1200px 600px at 20% -10%, rgba(255,255,255,0.18), transparent 60%),
-    radial-gradient(800px 500px at 90% 20%, rgba(255,255,255,0.12), transparent 60%),
-    linear-gradient(180deg, #0b1020, #020617)
+    radial-gradient(1200px 600px at 20% -10%, rgba(34,197,94,0.25), transparent 60%),
+    radial-gradient(800px 500px at 90% 20%, rgba(34,197,94,0.15), transparent 60%),
+    linear-gradient(180deg, #020617, #020617)
   `,
   color: "#f5f7fa",
   fontFamily: "Inter, system-ui",
@@ -177,19 +182,26 @@ const header = {
   justifyContent: "space-between",
   padding: "28px 56px",
   backdropFilter: "blur(40px)",
-  background: "rgba(255,255,255,0.06)",
-  borderBottom: "1px solid rgba(255,255,255,0.18)",
+  background: "rgba(255,255,255,0.05)",
+  borderBottom: "1px solid rgba(255,255,255,0.15)",
+};
+
+const backendBadge = {
+  width: 90,
+  height: 90,
+  borderRadius: "50%",
+  background: "rgba(34,197,94,0.2)",
+  border: "1px solid rgba(34,197,94,0.6)",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "center",
+  backdropFilter: "blur(20px)",
 };
 
 const eyebrow = { fontSize: 12, letterSpacing: 2, opacity: 0.8 };
 const title = { margin: 0, fontSize: 32, fontWeight: 700 };
 const subtitle = { fontSize: 14, opacity: 0.75 };
-
-const badge = {
-  padding: "6px 16px",
-  borderRadius: 999,
-  background: "rgba(255,255,255,0.18)",
-};
 
 const hero = {
   display: "grid",
@@ -204,6 +216,8 @@ const heroList = { marginTop: 16 };
 
 const heroImage = {
   width: "100%",
+  marginTop: 24,
+  transform: "translateX(-20px)",
   borderRadius: 32,
   boxShadow: `
     0 60px 120px rgba(0,0,0,0.55),
@@ -237,14 +251,9 @@ const grid = {
 const glass = {
   background: "rgba(255,255,255,0.045)",
   backdropFilter: "blur(42px) saturate(180%)",
-  WebkitBackdropFilter: "blur(42px) saturate(180%)",
   borderRadius: 28,
   padding: 28,
   border: "1px solid rgba(255,255,255,0.25)",
-  boxShadow: `
-    inset 0 1px 0 rgba(255,255,255,0.25),
-    0 24px 80px rgba(0,0,0,0.35)
-  `,
 };
 
 const input = {
