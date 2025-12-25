@@ -74,7 +74,7 @@ export default function App() {
 
         {/* IMAGE */}
         <img
-          src="/piezo-step,jpg"
+          src="/piezo-step.jpg"
           alt="Person stepping on piezoelectric tile"
           style={heroImage}
         />
