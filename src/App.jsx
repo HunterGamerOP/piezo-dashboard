@@ -64,23 +64,23 @@ export default function App() {
             <li>♻️ Sustainable energy planning</li>
           </ul>
 
-          <div style={avgBox}>
-            <span>Average Power</span>
-            <strong>
+          <div style={avgGlass}>
+            <span style={{ opacity: 0.75 }}>Average Power</span>
+            <strong style={{ fontSize: 22 }}>
               {stats?.avg_power?.toFixed(2) ?? "--"} mW
             </strong>
           </div>
         </div>
 
-        {/* IMAGE BACK */}
+        {/* IMAGE */}
         <img
-          src="/piezo-step.jpg"
+          src="/piezo-step,jpg"
           alt="Person stepping on piezoelectric tile"
           style={heroImage}
         />
       </section>
 
-      {/* CONTENT */}
+      {/* MAIN CONTENT */}
       <main style={content}>
         <div style={statsGrid}>
           <Stat label="Total Readings" value={stats?.count ?? "--"} />
@@ -97,8 +97,8 @@ export default function App() {
             </p>
             <img
               src="/energy-output-vs-people.png"
+              alt="Energy graph"
               style={graph}
-              alt="Graph"
             />
           </Glass>
 
@@ -136,6 +136,7 @@ export default function App() {
 }
 
 /* COMPONENTS */
+
 function Glass({ children }) {
   return <div style={glass}>{children}</div>;
 }
@@ -158,104 +159,129 @@ function Input({ label, value, onChange }) {
   );
 }
 
-/* STYLES */
+/* STYLES — APPLE GLASS */
+
 const page = {
   minHeight: "100vh",
-  background:
-    "radial-gradient(circle at top, rgba(255,255,255,0.12), transparent 45%), #020617",
-  color: "#e5e7eb",
+  background: `
+    radial-gradient(1200px 600px at 20% -10%, rgba(255,255,255,0.18), transparent 60%),
+    radial-gradient(800px 500px at 90% 20%, rgba(255,255,255,0.12), transparent 60%),
+    linear-gradient(180deg, #0b1020, #020617)
+  `,
+  color: "#f5f7fa",
   fontFamily: "Inter, system-ui",
 };
 
 const header = {
   display: "flex",
   justifyContent: "space-between",
-  padding: "28px 48px",
-  backdropFilter: "blur(30px)",
+  padding: "28px 56px",
+  backdropFilter: "blur(40px)",
   background: "rgba(255,255,255,0.06)",
-  borderBottom: "1px solid rgba(255,255,255,0.15)",
+  borderBottom: "1px solid rgba(255,255,255,0.18)",
 };
 
 const eyebrow = { fontSize: 12, letterSpacing: 2, opacity: 0.8 };
-const title = { margin: 0, fontSize: 30 };
-const subtitle = { fontSize: 14, opacity: 0.8 };
-const badge = { padding: "6px 14px", borderRadius: 999, background: "rgba(255,255,255,0.15)" };
+const title = { margin: 0, fontSize: 32, fontWeight: 700 };
+const subtitle = { fontSize: 14, opacity: 0.75 };
+
+const badge = {
+  padding: "6px 16px",
+  borderRadius: 999,
+  background: "rgba(255,255,255,0.18)",
+};
 
 const hero = {
   display: "grid",
-  gridTemplateColumns: "1.2fr 1fr",
-  gap: 40,
-  padding: "60px 80px",
+  gridTemplateColumns: "1.1fr 1fr",
+  gap: 48,
+  padding: "64px 96px",
 };
 
-const heroTitle = { fontSize: 34 };
-const heroText = { maxWidth: 520, opacity: 0.85 };
+const heroTitle = { fontSize: 36, fontWeight: 700 };
+const heroText = { maxWidth: 540, opacity: 0.85 };
 const heroList = { marginTop: 16 };
 
 const heroImage = {
   width: "100%",
-  borderRadius: 28,
-  boxShadow: "0 40px 80px rgba(0,0,0,0.5)",
+  borderRadius: 32,
+  boxShadow: `
+    0 60px 120px rgba(0,0,0,0.55),
+    inset 0 0 0 1px rgba(255,255,255,0.25)
+  `,
 };
 
-const avgBox = {
+const avgGlass = {
   marginTop: 20,
   padding: 16,
   borderRadius: 16,
   background: "rgba(255,255,255,0.12)",
+  backdropFilter: "blur(30px)",
 };
 
-const content = { padding: "40px 80px" };
+const content = { padding: "48px 96px" };
 
 const statsGrid = {
   display: "grid",
   gridTemplateColumns: "repeat(4,1fr)",
-  gap: 20,
-  marginBottom: 40,
+  gap: 24,
+  marginBottom: 48,
 };
 
 const grid = {
   display: "grid",
   gridTemplateColumns: "1.4fr 1fr",
-  gap: 24,
+  gap: 28,
 };
 
 const glass = {
-  background: "rgba(255,255,255,0.08)",
-  backdropFilter: "blur(28px)",
-  borderRadius: 24,
-  padding: 24,
-  border: "1px solid rgba(255,255,255,0.18)",
+  background: "rgba(255,255,255,0.045)",
+  backdropFilter: "blur(42px) saturate(180%)",
+  WebkitBackdropFilter: "blur(42px) saturate(180%)",
+  borderRadius: 28,
+  padding: 28,
+  border: "1px solid rgba(255,255,255,0.25)",
+  boxShadow: `
+    inset 0 1px 0 rgba(255,255,255,0.25),
+    0 24px 80px rgba(0,0,0,0.35)
+  `,
 };
 
 const input = {
   width: "100%",
   marginTop: 8,
-  marginBottom: 12,
-  padding: 10,
-  borderRadius: 12,
-  background: "rgba(0,0,0,0.4)",
+  marginBottom: 14,
+  padding: 12,
+  borderRadius: 14,
+  background: "rgba(0,0,0,0.45)",
   color: "#fff",
-  border: "1px solid rgba(255,255,255,0.2)",
+  border: "1px solid rgba(255,255,255,0.25)",
 };
 
 const button = {
   width: "100%",
-  padding: 12,
+  padding: 14,
   borderRadius: 999,
   background: "#22c55e",
   border: "none",
   fontWeight: 700,
+  cursor: "pointer",
 };
 
 const predictionBox = {
-  marginTop: 16,
-  padding: 16,
-  borderRadius: 16,
+  marginTop: 18,
+  padding: 18,
+  borderRadius: 18,
   background: "linear-gradient(135deg,#22c55e33,#22c55e11)",
   textAlign: "center",
   fontSize: 18,
+  fontWeight: 700,
 };
 
-const graph = { width: "100%", borderRadius: 16, marginTop: 12 };
+const graph = {
+  width: "100%",
+  borderRadius: 18,
+  marginTop: 16,
+};
+
 const muted = { opacity: 0.7 };
